@@ -3,9 +3,9 @@ all:
  vars:
 
   # GKE cluster variables
-  gcp_project: <project_name>              # ID of GCP Project
+  gcp_project: ascn-tp-22              # ID of GCP Project
   gcp_auth_kind: serviceaccount            # Do not change
-  gcp_cred_file: <path_service_account>    # Path to service account keys (json file downloaded from GCP)
+  gcp_cred_file: ./jsons/ascn-tp-22-302e1b8ab71f.json    # Path to service account keys (json file downloaded from GCP)
 
   gcp_zone: us-central1-a
   gcp_image_type: ubuntu_containerd
@@ -21,3 +21,15 @@ all:
 
   # Additional variables
   # ...
+
+  # MySQL variables 
+  database: ghost
+  database_user: ghost 
+  database_port: 3306
+
+  # Ghost variables 
+  default_ghost_port: 2368
+  ghost_image_version : ghost:5.14.1
+  n_replicas: 2
+  # Others variables 
+  namespace: default 

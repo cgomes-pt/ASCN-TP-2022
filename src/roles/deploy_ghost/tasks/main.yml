@@ -1,0 +1,111 @@
+---
+- name: Create address 
+  gcp_compute_address:
+    name: 'ghost-address'
+    region: us-central1
+    project: "{{ gcp_project }}"
+    auth_kind: serviceaccount
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: address 
+
+
+- name: Updating App Variables 
+  ansible.builtin.set_fact:
+    ghost_ip : "{{ address.address }}"
+    ghost_port : 80
+
+
+- name: Create Ghost Service 
+  kubernetes.core.k8s:
+    state: present 
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: ghost-blog
+        namespace: "{{ namespace }}"
+      spec:
+        loadBalancerIP: "{{ address.address }}"
+        type: LoadBalancer
+        selector:
+          app: ghost-blog
+        ports:
+        - protocol: TCP
+          port: 80
+          targetPort: "{{ default_ghost_port }}"
+
+
+- name: Create persistent volume storage 
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+         name: ghost-pvclaim
+         namespace: "{{ namespace }}"
+      spec:
+         accessModes:
+         - ReadWriteOnce
+         resources:
+            requests:
+              storage: 10Gi
+
+
+- name: Deploy ghost
+  kubernetes.core.k8s:
+    state: present 
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+          name: ghost-blog
+          namespace: "{{ namespace }}"
+          labels:
+              app: ghost-blog
+      spec:
+          replicas: "{{ n_replicas }}"
+          selector:
+              matchLabels:
+                  app: ghost-blog
+          template:
+              metadata:
+                  labels:
+                      app: ghost-blog
+              spec:
+                  containers:
+                  - name: ghost-blog
+                    image: "{{ ghost_image_version }}"
+                    imagePullPolicy: Always
+                    ports:
+                      - containerPort: "{{ default_ghost_port }}"
+                    env:
+                      - name: database__client
+                        value: mysql
+                      - name: database__connection__host
+                        value: ghost-mysql
+                      - name: database__connection__user
+                        value: "{{ database_user }}"
+                      - name: database__connection__password
+                        valueFrom:
+                          secretKeyRef:
+                            name: ghost-data
+                            key: password
+                      - name: database__connection__database
+                        value: "{{ database }}"
+                      - name: url
+                        value: "http://{{ ghost_ip }}/"
+                    volumeMounts:
+                    - mountPath: /var/lib/ghost/content
+                      name: ghost-pvclaim
+                  volumes:
+                  - name: ghost-pvclaim
+                    persistentVolumeClaim:
+                      claimName: ghost-pvclaim
+
+
+
+
+#- debug:
+#    var: ghost_ip  
