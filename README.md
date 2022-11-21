@@ -7,7 +7,7 @@
 `ansible-playbook deploy-ghost.yml -i inventory/gcp.yml`
 
 - Destruir cluster
-`ansible-playbook destroy_gke_cluster -i inventory/gcp.yml`
+`ansible-playbook destroy-gke-cluster -i inventory/gcp.yml`
 
 
 
