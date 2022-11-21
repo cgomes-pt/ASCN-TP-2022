@@ -16,7 +16,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-name: ghost-data
+	name: ghost-data
 type: Opaque
 data:
 	password: UGFzc3dvcmQkMTIzNDU2  # Password$123456
