@@ -1,3 +1,9 @@
 ---
 # Playbook to undeploy Ghost and its component
 # TO DO
+
+# Nota: all = remove tudo, pods, deployments, serviços, etc.
+- hosts: localhost
+  tasks: 
+    - name: Removing Ghost deployment 
+      command: kubectl delete all --all -n "{{ namespace }}"

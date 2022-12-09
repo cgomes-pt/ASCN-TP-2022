@@ -2,6 +2,12 @@
 # Playbook to deploy Ghost and its components
 # TO DO
 
+- name: Create namespace
+  hosts: localhost
+  gather_facts: false
+  roles:
+      - create_namespace
+
 - hosts: localhost
   tasks: 
     - name: Creating kubernetes secrets 
@@ -13,9 +19,9 @@
   roles:
       - deploy_mysql
 
+
 - name: Deploy Ghost
   hosts: localhost
   gather_facts: false
   roles:
       - deploy_ghost
-
