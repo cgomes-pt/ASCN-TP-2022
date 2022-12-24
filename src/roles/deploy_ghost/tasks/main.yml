@@ -120,19 +120,10 @@
   register: pod_list
 
 # Nota: Neste momento só está a executar num pod só, é mudar a parte da password para usar através de secret
-# - name: Creating admin account 
-#   kubernetes.core.k8s_exec:
-#     namespace: "{{ namespace }}"
-#     pod: "{{ pod_list.resources[0].metadata.name }}"
-#     command: mysql -h 0.0.0.0 -u ghost -p "{{ password }}" -e 'use ghost; update users set name="ascn", password="\$2b\$10\$Z9SYrWRxf7i0dzx6jC.39uIQVtQqpUTGhRmqEkHhrKlewPRxy9MU.", email="ascn@example.com", status="active" where id=1;'
-#   delay: 60
-#   retries: 3 
-
-# Isto ajuda para ver se as variaveis estão direitas 
-#- debug:
-#    var: ghost_ip  
-
-- name: Creating admin account - Alternative
-  shell: kubectl exec -it "{{ pod_list.resources[0].metadata.name }}" -- mysql -u ghost -p "{{ password }}" <<< 'use ghost; update users set name="ascn", password="\$2b\$10\$Z9SYrWRxf7i0dzx6jC.39uIQVtQqpUTGhRmqEkHhrKlewPRxy9MU.", email="ascn@example.com", status="active" where id=1;'
+- name: Creating admin account 
+  kubernetes.core.k8s_exec:
+    namespace: "{{ namespace }}"
+    pod: "{{ pod_list.resources[0].metadata.name }}"
+    command: mysql -u ghost -p"Password$123456" -e 'use ghost; update users set name="ascn", password="\$2b\$10\$Xx0JIHSoLATgIMlu/.P8quzSnz500.S7nXu.QHF4JqKqZYqwCK.ti", email="ascn@example.com", status="active" where id=1;'
   delay: 60
   retries: 3 

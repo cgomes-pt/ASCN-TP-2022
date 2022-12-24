@@ -1,13 +1,13 @@
 # ASCN TP 2022
 
 - Criar cluster
-`ansible-playbook create-gke-cluster.yml -i inventory/gcp.yml`
+`chmod +x create.sh && ./create.sh`
 
 - Dar deploy de ghost 
-`ansible-playbook deploy-ghost.yml -i inventory/gcp.yml`
+`chmod +x deploy.sh && ./deploy.sh`
 
 - Destruir cluster
-`ansible-playbook destroy-gke-cluster -i inventory/gcp.yml`
+`chmod +x destroy.sh && ./destroy.sh`
 
 
 
