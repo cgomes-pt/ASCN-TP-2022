@@ -16,11 +16,12 @@
 apiVersion: v1
 kind: Secret
 metadata:
-	name: ghost-data
+  name: ghost-data
+  namespace: ghost_namespace
 type: Opaque
 data:
-	password: UGFzc3dvcmQkMTIzNDU2  # Password$123456
-	root_password: UGFzc3dvcmQkMTIzNDU2  # Password$123456
+  password: UGFzc3dvcmQkMTIzNDU2 # Password$123456
+  root_password: UGFzc3dvcmQkMTIzNDU2 # Password$123456
 ```
 
 ## Ver erros

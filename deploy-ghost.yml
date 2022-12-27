@@ -25,3 +25,10 @@
   gather_facts: false
   roles:
       - deploy_ghost
+
+
+- name: Scaling MySQL
+  hosts: localhost
+  gather_facts: false
+  roles:
+      - scale_mysql

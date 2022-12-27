@@ -65,7 +65,6 @@
           labels:
               app: ghost-blog
       spec:
-          replicas: "{{ n_replicas }}"
           selector:
               matchLabels:
                   app: ghost-blog

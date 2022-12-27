@@ -1,0 +1,15 @@
+---
+# Playbook to scale ghost (in this case MySQL)
+
+
+# Por exemplo, quando corremos o deploy-ghost.yml, ele vai criar 1 pod para mysql, se corrermos isto, vai aumentar o nº de pods para 3 (definido no gcp.yml)
+# se por exemplo tivermos 3 pods e no gcp.yml tiver definido 1, 2 pods vão ser removidos
+# Ideia para mais tarde: Talvez passar como argumento o nº de pods
+
+- name: Scaling MySQL
+  hosts: localhost
+  gather_facts: false
+  roles:
+      - scale_mysql
+
+# TODO: Ver depois, por exemplo aumentar automaticamente o nº de pods quando atinge por exemplo 50% utilização CPU 

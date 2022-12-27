@@ -1,0 +1,23 @@
+---
+- name: Scale MySQL 
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: ghost-mysql
+        namespace: ghost-namespace
+      spec:
+        replicas: "{{ n_replicas }}"
+        selector:
+          matchLabels:
+            app: ghost
+        template:
+          metadata:
+            labels:
+              app: ghost
+          spec:
+            containers:
+              - name: mysql
+                image: mysql:latest
