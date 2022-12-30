@@ -9,21 +9,6 @@
 - Destruir cluster
 `ansible-playbook destroy-gke-cluster -i inventory/gcp.yml`
 
-
-
-## Exemplo de um ficheiro secret.yml
-```
-apiVersion: v1
-kind: Secret
-metadata:
-  name: ghost-data
-  namespace: ghost_namespace
-type: Opaque
-data:
-  password: UGFzc3dvcmQkMTIzNDU2 # Password$123456
-  root_password: UGFzc3dvcmQkMTIzNDU2 # Password$123456
-```
-
 ## Ver erros
 - Ver o nome do pod
 `kubectl get pods`
