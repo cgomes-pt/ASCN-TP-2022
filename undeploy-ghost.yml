@@ -7,3 +7,6 @@
   tasks: 
     - name: Removing Ghost deployment 
       command: kubectl delete all --all -n "{{ namespace }}"
+
+# TODO:
+# De momento isto apaga tudo, é preciso separar as coisas!

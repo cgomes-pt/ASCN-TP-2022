@@ -105,9 +105,9 @@
 
 
 # Necessário uma pequena pausa para dar tempo aos pods e serviços serem criados.
-- name: Pausing playbook for 90 seconds
-  pause:
-    seconds: 90 
+# - name: Pausing playbook for 90 seconds
+#   pause:
+#     seconds: 90 
 
 # Serve para descobrir o nome dos pods onde estão o mysql para depois criarmos uma conta admin
 - name: Search for all pods from mysql 
@@ -123,9 +123,11 @@
   kubernetes.core.k8s_exec:
     namespace: "{{ namespace }}"
     pod: "{{ pod_list.resources[0].metadata.name }}"
-    command: mysql -h 127.0.0.1 -u ghost -p'Password$123456' -e 'use ghost; update users set name="ascn", password="ascn123", email="ascn@example.com", status="active" where id=1;'
-  delay: 60
-  retries: 3 
+    command: mysql -h 127.0.0.1 -u ghost -p'Password$123456' -e 'use ghost; update users set name="ascn", password="\$2b\$10\$Z9SYrWRxf7i0dzx6jC.39uIQVtQqpUTGhRmqEkHhrKlewPRxy9MU.", email="ascn@example.com", status="active" where id=1;'
+  register: admin_condition
+  until: "admin_condition is not failed"
+  retries: 5 
+  delay: 20
 
 # Isto ajuda para ver se as variaveis estão direitas 
 #- debug:
