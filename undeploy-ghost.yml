@@ -10,3 +10,10 @@
 
 # TODO:
 # De momento isto apaga tudo, é preciso separar as coisas!
+
+# Pre definiçao - e feito o undeploy dos serviços ghost, mantendo os dados dos users
+#- name: Undeploy Ghost
+#  hosts: localhost
+#  gather_facts: false
+#  roles:
+#      - delete_ghost
