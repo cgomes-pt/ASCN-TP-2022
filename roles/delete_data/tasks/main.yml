@@ -5,4 +5,4 @@
 - hosts: localhost
   tasks: 
     - name: Removing User Data
-      command: kubectl delete pods,services ghost-mysql -n "{{ namespace }}"
+      command: kubectl delete -l app=ghost-mysql pods,services -n "{{ namespace }}"
