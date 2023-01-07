@@ -10,6 +10,7 @@
 `ansible-playbook destroy-gke-cluster -i inventory/gcp.yml`
 
 ## Ver erros
+
 - Ver o nome do pod
 `kubectl get pods`
 - Ver qual é o problema

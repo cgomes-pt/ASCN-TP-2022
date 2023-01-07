@@ -1,36 +1,41 @@
 ---
 all:
- vars:
+  vars:
+    # GKE cluster variables
+    gcp_project: ascn-tp-22 # ID of GCP Project
+    gcp_auth_kind: serviceaccount # Do not change
+    gcp_cred_file: ./jsons/sa.json # Path to service account keys (json file downloaded from GCP)
 
-  # GKE cluster variables
-  gcp_project: ascn-tp-22              # ID of GCP Project
-  gcp_auth_kind: serviceaccount            # Do not change
-  gcp_cred_file: ./jsons/sa.json    # Path to service account keys (json file downloaded from GCP)
+    gcp_zone: us-central1-a
+    gcp_image_type: ubuntu_containerd
+    gcp_machine_type: e2-small # Can be changed if necessary
+    gcp_disk_size_gb: 100 # Can be changed if necessary
+    gcp_initial_node_count: 2 # Number of nodes to create. Can be changed if necessary
 
-  gcp_zone: us-central1-a
-  gcp_image_type: ubuntu_containerd
-  gcp_machine_type: e2-small          # Can be changed if necessary
-  gcp_disk_size_gb: 100                # Can be changed if necessary
-  gcp_initial_node_count: 2            # Number of nodes to create. Can be changed if necessary
+    # APP variables
+    ghost_ip: <GHOST_SERVICE_IP> # Needs to be updated
+    ghost_port: <GHOST_PORT> # Needs to be updated
 
+    # Additional variables
+    # ...
 
-  # APP variables
-  ghost_ip: <GHOST_SERVICE_IP>     # Needs to be updated
-  ghost_port: <GHOST_PORT>         # Needs to be updated
+    # MySQL variables
+    database: ghost
+    database_user: ghost
+    database_port: 3306
 
+    # Ghost variables
+    default_ghost_port: 2368
+    ghost_image_version: ghost:5.14.1
+    n_replicas: 3
 
-  # Additional variables
-  # ...
+    password: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      31333538383037346636353466393333313136623731333963303432626236373364626561643036
+      6665646566633263613232363033343261356635623366350a656639326234303437383764623734
+      64646164633962316331373636353539353633383931363165633766666330393333613262623165
+      3762353833353334390a303637333838353761343634326638666264316566323237396338383263
+      3965
 
-  # MySQL variables 
-  database: ghost
-  database_user: ghost 
-  database_port: 3306
-
-  # Ghost variables 
-  default_ghost_port: 2368
-  ghost_image_version : ghost:5.14.1
-  n_replicas: 3
-
-  # Others variables 
-  namespace: ghost-namespace 
+    # Others variables
+    namespace: ghost-namespace

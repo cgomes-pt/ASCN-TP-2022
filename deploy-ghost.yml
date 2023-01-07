@@ -6,29 +6,22 @@
   hosts: localhost
   gather_facts: false
   roles:
-      - create_namespace
-
-- hosts: localhost
-  tasks: 
-    - name: Creating kubernetes secrets 
-      command: kubectl apply -f inventory/secret.yml
+    - create_namespace
 
 - name: Deploy MySQL
   hosts: localhost
   gather_facts: false
   roles:
-      - deploy_mysql
-
+    - deploy_mysql
 
 - name: Deploy Ghost
   hosts: localhost
   gather_facts: false
   roles:
-      - deploy_ghost
-
+    - deploy_ghost
 
 - name: Scaling MySQL
   hosts: localhost
   gather_facts: false
   roles:
-      - scale_mysql
+    - scale_mysql
