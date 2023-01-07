@@ -1,24 +1,22 @@
 ---
-- name: Create address 
+- name: Create address
   gcp_compute_address:
-    name: 'ghost-address'
+    name: "ghost-address"
     region: us-central1
     project: "{{ gcp_project }}"
     auth_kind: serviceaccount
     service_account_file: "{{ gcp_cred_file }}"
     state: present
-  register: address 
+  register: address
 
-
-- name: Updating App Variables 
+- name: Updating App Variables
   ansible.builtin.set_fact:
-    ghost_ip : "{{ address.address }}"
-    ghost_port : 80
+    ghost_ip: "{{ address.address }}"
+    ghost_port: 80
 
-
-- name: Create Ghost Service 
+- name: Create Ghost Service
   kubernetes.core.k8s:
-    state: present 
+    state: present
     definition:
       apiVersion: v1
       kind: Service
@@ -31,86 +29,80 @@
         selector:
           app: ghost-blog
         ports:
-        - protocol: TCP
-          port: 80
-          targetPort: "{{ default_ghost_port }}"
+          - protocol: TCP
+            port: 80
+            targetPort: "{{ default_ghost_port }}"
 
-
-- name: Create persistent volume storage 
+- name: Create persistent volume storage
   kubernetes.core.k8s:
     state: present
     definition:
       apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-         name: ghost-pvclaim
-         namespace: "{{ namespace }}"
+        name: ghost-pvclaim
+        namespace: "{{ namespace }}"
       spec:
-         accessModes:
-         - ReadWriteOnce
-         resources:
-            requests:
-              storage: 10Gi
-
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
 
 - name: Deploy ghost
   kubernetes.core.k8s:
-    state: present 
+    state: present
     definition:
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-          name: ghost-blog
-          namespace: "{{ namespace }}"
-          labels:
-              app: ghost-blog
+        name: ghost-blog
+        namespace: "{{ namespace }}"
+        labels:
+          app: ghost-blog
       spec:
-          selector:
-              matchLabels:
-                  app: ghost-blog
-          template:
-              metadata:
-                  labels:
-                      app: ghost-blog
-              spec:
-                  containers:
-                  - name: ghost-blog
-                    image: "{{ ghost_image_version }}"
-                    imagePullPolicy: Always
-                    ports:
-                      - containerPort: "{{ default_ghost_port }}"
-                    env:
-                      - name: database__client
-                        value: mysql
-                      - name: database__connection__host
-                        value: ghost-mysql
-                      - name: database__connection__user
-                        value: "{{ database_user }}"
-                      - name: database__connection__password
-                        valueFrom:
-                          secretKeyRef:
-                            name: ghost-data
-                            key: password
-                      - name: database__connection__database
-                        value: "{{ database }}"
-                      - name: url
-                        value: "http://{{ ghost_ip }}/"
-                    volumeMounts:
-                    - mountPath: /var/lib/ghost/content
-                      name: ghost-pvclaim
-                  volumes:
-                  - name: ghost-pvclaim
-                    persistentVolumeClaim:
-                      claimName: ghost-pvclaim
-
+        selector:
+          matchLabels:
+            app: ghost-blog
+        template:
+          metadata:
+            labels:
+              app: ghost-blog
+          spec:
+            containers:
+              - name: ghost-blog
+                image: "{{ ghost_image_version }}"
+                imagePullPolicy: Always
+                ports:
+                  - containerPort: "{{ default_ghost_port }}"
+                env:
+                  - name: database__client
+                    value: mysql
+                  - name: database__connection__host
+                    value: ghost-mysql
+                  - name: database__connection__user
+                    value: "{{ database_user }}"
+                  - name: database__connection__password
+                    value: "{{ password }}"
+                  - name: database__connection__database
+                    value: "{{ database }}"
+                  - name: url
+                    value: "http://{{ ghost_ip }}/"
+                volumeMounts:
+                  - mountPath: /var/lib/ghost/content
+                    name: ghost-pvclaim
+            volumes:
+              - name: ghost-pvclaim
+                persistentVolumeClaim:
+                  claimName: ghost-pvclaim
 
 # Necessário uma pequena pausa para dar tempo aos pods e serviços serem criados.
 # - name: Pausing playbook for 90 seconds
 #   pause:
-#     seconds: 90 
+#     seconds: 90
 
 # Serve para descobrir o nome dos pods onde estão o mysql para depois criarmos uma conta admin
-- name: Search for all pods from mysql 
+- name: Search for all pods from mysql
   kubernetes.core.k8s_info:
     kind: Pod
     label_selectors:
@@ -119,16 +111,15 @@
   register: pod_list
 
 # Nota: Neste momento só está a executar num pod só, é mudar a parte da password para usar através de secret
-- name: Creating admin account 
+- name: Creating admin account
   kubernetes.core.k8s_exec:
     namespace: "{{ namespace }}"
     pod: "{{ pod_list.resources[0].metadata.name }}"
     command: mysql -h 127.0.0.1 -u ghost -p'Password$123456' -e 'use ghost; update users set name="ascn", password="\$2b\$10\$Z9SYrWRxf7i0dzx6jC.39uIQVtQqpUTGhRmqEkHhrKlewPRxy9MU.", email="ascn@example.com", status="active" where id=1;'
   register: admin_condition
   until: "admin_condition is not failed"
-  retries: 5 
+  retries: 5
   delay: 20
-
-# Isto ajuda para ver se as variaveis estão direitas 
+# Isto ajuda para ver se as variaveis estão direitas
 #- debug:
-#    var: ghost_ip  
+#    var: ghost_ip

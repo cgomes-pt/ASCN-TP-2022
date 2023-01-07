@@ -1,7 +1,7 @@
 ---
-- name: Create MySQL Service 
+- name: Create MySQL Service
   kubernetes.core.k8s:
-    state: present 
+    state: present
     definition:
       apiVersion: v1
       kind: Service
@@ -17,27 +17,25 @@
           app: ghost
           tier: mysql
 
-
-- name: Create persistent volume storage 
+- name: Create persistent volume storage
   kubernetes.core.k8s:
     state: present
     definition:
       apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
-         name: mysql-pvclaim
-         namespace: "{{ namespace }}"
+        name: mysql-pvclaim
+        namespace: "{{ namespace }}"
       spec:
-         accessModes:
-         - ReadWriteOnce
-         resources:
-           requests:
-             storage: 10Gi
-
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
 
 - name: Deploy mysql
   kubernetes.core.k8s:
-    state: present 
+    state: present
     definition:
       apiVersion: apps/v1
       kind: Deployment
@@ -60,30 +58,24 @@
               tier: mysql
           spec:
             containers:
-            - image: mysql:latest
-              name: mysql
-              env:
-              - name: MYSQL_DATABASE
-                value: "{{ database }}"
-              - name: MYSQL_USER
-                value: "{{ database_user }}"
-              - name: MYSQL_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: ghost-data
-                    key: password
-              - name: MYSQL_ROOT_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: ghost-data
-                    key: root_password
-              ports:
-              - containerPort: "{{ database_port }}"
+              - image: mysql:latest
                 name: mysql
-              volumeMounts:
-              - name: mysql-persistent-storage
-                mountPath: /var/lib/mysql
+                env:
+                  - name: MYSQL_DATABASE
+                    value: "{{ database }}"
+                  - name: MYSQL_USER
+                    value: "{{ database_user }}"
+                  - name: MYSQL_PASSWORD
+                    value: "{{ password }}"
+                  - name: MYSQL_ROOT_PASSWORD
+                    value: "{{ password }}"
+                ports:
+                  - containerPort: "{{ database_port }}"
+                    name: mysql
+                volumeMounts:
+                  - name: mysql-persistent-storage
+                    mountPath: /var/lib/mysql
             volumes:
-            - name: mysql-persistent-storage
-              persistentVolumeClaim:
-                claimName: mysql-pvclaim
+              - name: mysql-persistent-storage
+                persistentVolumeClaim:
+                  claimName: mysql-pvclaim
