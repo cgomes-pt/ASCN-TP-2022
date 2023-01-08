@@ -3,17 +3,21 @@
 # TO DO
 
 # Nota: all = remove tudo, pods, deployments, serviços, etc.
-- hosts: localhost
-  tasks: 
-    - name: Removing Ghost deployment 
-      command: kubectl delete all --all -n "{{ namespace }}"
+# - hosts: localhost
+#   tasks: 
+#     - name: Removing Ghost deployment 
+#       command: kubectl delete all --all -n "{{ namespace }}"
 
 # TODO:
 # De momento isto apaga tudo, é preciso separar as coisas!
 
 # Pre definiçao - e feito o undeploy dos serviços ghost, mantendo os dados dos users
+
+# Não está a funcionar isto! TODO! 
 #- name: Undeploy Ghost
 #  hosts: localhost
 #  gather_facts: false
 #  roles:
-#      - delete_ghost
+#      - { role: delete_ghost }
+#      - { role: delete_db, when: "delete_data is defined and delete_data=='true'"}
+
