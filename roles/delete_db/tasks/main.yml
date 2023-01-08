@@ -1,7 +1,6 @@
 ---
 # Eliminar dados de utilizadores armazenados
-# - hosts: localhost
-#   tasks: 
-#     - name: Removing User Data
-#       command: kubectl delete -l app=ghost-mysql pods,services -n "{{ namespace }}"
 
+ - name : Remove user data
+   command: kubectl delete -l app=ghost deployments,services,pods -n "{{ namespace }}"
+ 

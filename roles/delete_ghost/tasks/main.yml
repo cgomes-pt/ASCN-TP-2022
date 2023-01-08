@@ -1,6 +1,6 @@
 ---
 # Undeploy dos serviços do ghost
-# - hosts: localhost
-#   tasks: 
-#     - name: Undeploy Ghost Services
-#       command: kubectl delete -l app=ghost-blog pods,services -n "{{ namespace }}" 
+
+ - name: Undeploy Ghost Services
+   command: kubectl delete -l app=ghost-blog pods,services,deployments -n "{{ namespace }}"
+ 
