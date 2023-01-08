@@ -1,13 +1,15 @@
 # ASCN TP 2022
 
 - Criar cluster
-`ansible-playbook create-gke-cluster.yml -i inventory/gcp.yml`
+`ansible-playbook create-gke-cluster.yml -i inventory/gcp.yml` --ask-vault-pass
 
 - Dar deploy de ghost 
-`ansible-playbook deploy-ghost.yml -i inventory/gcp.yml`
+`ansible-playbook deploy-ghost.yml -i inventory/gcp.yml` --ask-vault-pass
 
 - Destruir cluster
-`ansible-playbook destroy-gke-cluster -i inventory/gcp.yml`
+`ansible-playbook destroy-gke-cluster.yml -i inventory/gcp.yml` --ask-vault-pass
+
+Vault pass: ascn2223
 
 ## Ver erros
 
