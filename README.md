@@ -9,7 +9,6 @@
 - Destruir cluster
 `ansible-playbook destroy-gke-cluster.yml -i inventory/gcp.yml --ask-vault-pass`
 
-Vault pass: ascn2223
 
 ## Ver erros
 
