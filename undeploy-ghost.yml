@@ -6,4 +6,4 @@
   gather_facts: false
   roles:
       - { role: delete_ghost }
-      - { role: delete_db } #, when: delete_data=='true'}
+      - { role: delete_db, when: "delete_data is defined and delete_data=='true'"}

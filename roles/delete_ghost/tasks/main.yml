@@ -1,6 +1,17 @@
 ---
 # Undeploy dos serviços do ghost
+# Dar undeploy de ghost 
+- name: Undeploy 
+  command: kubectl delete -l app=ghost-blog deployment -n "{{ namespace }}"
 
- - name: Undeploy Ghost Services
-   command: kubectl delete -l app=ghost-blog pods,services,deployments -n "{{ namespace }}"
- 
+# Apagar os pods 
+- name: Undeploy Pods 
+  command: kubectl delete -l app=ghost-blog pods -n "{{ namespace }}"
+
+# Apagar os serviços
+- name: Undeploy Services 
+  command: kubectl delete service ghost-blog -n "{{ namespace }}"
+
+# Apagar os discos
+- name: Undeploy Storage
+  command: kubectl delete pvc ghost-pvclaim -n "{{ namespace }}"

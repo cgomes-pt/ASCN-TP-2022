@@ -1,6 +1,17 @@
 ---
 # Eliminar dados de utilizadores armazenados
+# Dar undeploy de ghost 
+- name: Undeploy 
+  command: kubectl delete -l app=ghost deployment -n "{{ namespace }}"
 
- - name : Remove user data
-   command: kubectl delete -l app=ghost deployments,services,pods -n "{{ namespace }}"
- 
+# Apagar os pods 
+- name: Undeploy Pods 
+  command: kubectl delete -l app=ghost pods -n "{{ namespace }}"
+
+# Apagar os serviços
+- name: Undeploy Services 
+  command: kubectl delete service ghost-mysql -n "{{ namespace }}"
+
+# Apagar os discos
+- name: Undeploy Storage
+  command: kubectl delete pvc mysql-pvclaim -n "{{ namespace }}"
