@@ -1,4 +1,5 @@
 ---
+# Isto é um exemplo de scale em que o utilizador pode decidir se quer aumentar ou diminuir 
 - name: Scale MySQL 
   kubernetes.core.k8s:
     state: present

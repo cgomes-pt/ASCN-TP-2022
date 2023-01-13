@@ -12,4 +12,9 @@
   roles:
       - scale_mysql
 
-# TODO: Ver depois, por exemplo aumentar automaticamente o nº de pods quando atinge por exemplo 50% utilização CPU 
+# Exemplo de autoscale Ghost, com imensos requests, se a utilização de CPU ultrapassar os 50%, são criados automaticamente novos pods 
+- name: Autoscale Ghost 
+  hosts: localhost
+  gather_facts: false 
+  roles:
+      - autoscale_ghost 

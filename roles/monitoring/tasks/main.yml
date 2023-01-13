@@ -1,2 +1,9 @@
+---
+# Para caso haver mais que uma dashboard, assim temos a certeza que esse dashboard é criado
+- command: "ls ./dashboards/"
+  register: dashboards
+
+# Adiciona os dashboards todos à google 
 - name: Creating dashboard
-  shell: gcloud monitoring dashboards create --config-from-file="./dashboards/dashboard.json"
+  shell: "gcloud monitoring dashboards create --config-from-file=./dashboards/{{ item }}"
+  with_items: " {{ dashboards.stdout_lines }} "

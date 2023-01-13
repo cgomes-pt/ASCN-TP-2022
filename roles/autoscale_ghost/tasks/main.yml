@@ -1,0 +1,5 @@
+---
+# Exemplo de um auto scale para ghost 
+
+- name: Autoscale Ghost 
+  shell: kubectl autoscale deployment ghost-blog -n "{{ namespace }}" --max 3 --min 1 --cpu-percent 50
