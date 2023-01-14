@@ -4,7 +4,7 @@
   meta: refresh_inventory
 
 - name: Check that you can connect (GET) to Ghost and it returns a status 200
-  ansible.builtin.uri:
+  uri:
     url: "http://{{ ghost_ip }}:{{ghost_port}}/"
     method: GET
     status_code: 200
@@ -12,3 +12,28 @@
   until: result.status == 200
   retries: 3
   delay: 5
+
+- set_fact: html_output_file="/tmp/locust-{{ ansible_date_time.iso8601 }}.html"
+
+- name: Run load tests
+  shell: >
+    locust \
+      --headless \
+      --locustfile load_tests/posts.py \
+      --host=http://{{ ghost_ip }}:{{ghost_port}}/ghost/api \
+      --users {{ locust_users }} \
+      --spawn-rate {{ locust_user_rate }} \
+      --run-time {{ locust_run_time }} \
+      --json \
+      --skip-log \
+      --html {{ html_output_file }}
+  environment:
+    GHOST_ADMIN_USERNAME: 'ascn@example.com'
+    GHOST_ADMIN_PASSWORD: 'BvYU7bNZ8wkchL'
+  register: load_output
+
+- name: Locust JSON stats
+  debug: msg={{ load_output.stdout | from_json }}
+
+- name: Locust HTML results page
+  debug: msg="Locust HTML results page -> {{ html_output_file }}"

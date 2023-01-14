@@ -17,7 +17,9 @@ all:
     ghost_port: 80 # Needs to be updated
 
     # Additional variables
-    # ...
+    locust_users: 5
+    locust_user_rate: 1
+    locust_run_time: '1m'
 
     # MySQL variables
     database: ghost

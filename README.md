@@ -10,6 +10,9 @@
 `ansible-playbook destroy-gke-cluster.yml -i inventory/gcp.yml --ask-vault-pass`
 
 
+- Testar Ghost
+`ansible-playbook test-all.yml -i inventory/gcp.yml`
+
 ## Ver erros
 
 - Ver o nome do pod
