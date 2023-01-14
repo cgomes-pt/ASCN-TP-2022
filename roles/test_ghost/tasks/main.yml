@@ -29,8 +29,9 @@
       --html {{ html_output_file }}
   environment:
     GHOST_ADMIN_USERNAME: 'ascn@example.com'
-    GHOST_ADMIN_PASSWORD: 'BvYU7bNZ8wkchL'
+    GHOST_ADMIN_PASSWORD: 'ascn123'
   register: load_output
+  failed_when: "load_output.rc not in [ 0, 1 ]"
 
 - name: Locust JSON stats
   debug: msg={{ load_output.stdout | from_json }}

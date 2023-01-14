@@ -21,7 +21,7 @@ class GhostAPIUser(HttpUser):
             if response.status_code == 201:
                 response.success()
             else:
-                response.fail()
+                response.failure("Couldn't create session")
 
     @task
     def get_posts(self):
@@ -43,7 +43,8 @@ class GhostAPIUser(HttpUser):
             if response.status_code == 201:
                 response.success()
             else:
-                response.fail()
+                response.failure("Couldn't create post")
+                return
 
         post_id = json.loads(response.text)['posts'][0]['id']
         self.get_post(post_id)
@@ -53,7 +54,8 @@ class GhostAPIUser(HttpUser):
             if response.status_code == 200 and json.loads(response.text)['posts'][0]['title'] == 'My Test Post':
                 response.success()
             else:
-                response.fail()
+                response.failure("Couldn't get post")
+                return
 
         self.delete_post(post_id)
 
@@ -62,7 +64,8 @@ class GhostAPIUser(HttpUser):
             if response.status_code == 204:
                 response.success()
             else:
-                response.fail()
+                response.failure("Couldn't delete post")
+                return
 
         self.get_deleted_post(post_id)
 
@@ -71,4 +74,4 @@ class GhostAPIUser(HttpUser):
             if response.status_code == 404:
                 response.success()
             else:
-                response.fail()
+                response.failure("Getting deleted post should return 404")
