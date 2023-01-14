@@ -1,0 +1,14 @@
+---
+- import_playbook: deploy-ghost.yml
+
+- import_playbook: scale-ghost.yml
+  vars:
+    auto_scale: 'true'
+
+- import_playbook: undeploy-ghost.yml
+
+- import_playbook: deploy-ghost.yml
+
+- import_playbook: scale-ghost.yml
+  vars:
+    auto_scale: 'false'

@@ -27,11 +27,12 @@ all:
     # Ghost variables
     default_ghost_port: 2368
     ghost_image_version: ghost:5.14.1
-    n_replicas: 3
+    n_replicas: 2
 
     # Others variables
     namespace: ghost-namespace
     delete_data: false 
+    auto_scale: false 
 
     username: !vault |
           $ANSIBLE_VAULT;1.1;AES256

@@ -5,16 +5,11 @@
 # Por exemplo, quando corremos o deploy-ghost.yml, ele vai criar 1 pod para mysql, se corrermos isto, vai aumentar o nº de pods para 3 (definido no gcp.yml)
 # se por exemplo tivermos 3 pods e no gcp.yml tiver definido 1, 2 pods vão ser removidos
 # Ideia para mais tarde: Talvez passar como argumento o nº de pods
+# Exemplo de autoscale Ghost, com imensos requests, se a utilização de CPU ultrapassar os 50%, são criados automaticamente novos pods 
 
-- name: Scaling MySQL
+- name: Scaling Ghost
   hosts: localhost
   gather_facts: false
   roles:
-      - scale_mysql
-
-# Exemplo de autoscale Ghost, com imensos requests, se a utilização de CPU ultrapassar os 50%, são criados automaticamente novos pods 
-- name: Autoscale Ghost 
-  hosts: localhost
-  gather_facts: false 
-  roles:
-      - autoscale_ghost 
+      - { role: scale_mysql, when: "auto_scale is defined and auto_scale=='false'" }
+      - { role: autoscale_ghost, when: "auto_scale is defined and auto_scale=='true'" }       
