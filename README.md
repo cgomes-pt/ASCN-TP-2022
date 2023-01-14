@@ -11,7 +11,7 @@
 
 
 - Testar Ghost
-`ansible-playbook test-all.yml -i inventory/gcp.yml`
+`ansible-playbook test-all.yml -i inventory/gcp.yml --ask-vault-pass`
 
 ## Ver erros
 
